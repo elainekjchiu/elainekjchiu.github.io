@@ -1,16 +1,15 @@
 ---
 layout: page
 title: About me
-subtitle: Why you'd want to go on a date with me
+subtitle: 
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+### My Backgroud  
+My name is Elaine Chiu, and I am a Ph.D. student in statistics at the University of Wisconsin-Madison. I have a Bachelor's degree in economics with a minor in political science. I also took several mathematics and computer science classes during my college years.  As a result, I am curious to see how statistics can push the boundary of knowledge.  
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+### My interests in statistics  
+I am mostly fascinated by the versatile nature of Bayesian modeling and now learning causal inference.  
 
-What else do you need?
+### My Culture and hobbies
+I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cooking and reading during my leisure time.  
 
-### My story
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](https://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
