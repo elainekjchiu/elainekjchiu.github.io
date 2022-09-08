@@ -1,78 +1,32 @@
 ---
 layout: post
-title: Sample blog post
-subtitle: Each post also has a subtitle
-gh-repo: daattali/beautiful-jekyll
-gh-badge: [star, fork, follow]
+title: Notes for Intro to Statistical Methods  
 tags: [test]
-comments: true
+comments: false
 ---
+This is a place you can find notes for introductory level of statistics.   
 
-This is a demo post to show you how to write blog posts with markdown.  I strongly encourage you to [take 5 minutes to learn how to write in markdown](https://markdowntutorial.com/) - it'll teach you how to transform regular text into bold/italics/headings/tables/etc.
+![Graphical Summary of Data](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Graphical%20Summary%20of%20data.pdf)
 
-**Here is some bold text**
-
-## Here is a secondary heading
-
-Here's a useless table:
-
-| Number | Next number | Previous number |
-| :------ |:--- | :--- |
-| Five | Six | Four |
-| Ten | Eleven | Nine |
-| Seven | Eight | Six |
-| Two | Three | One |
+![Numerical Summary of Data](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Numerical%20summary%20of%20data%2C%20Expectation%2C%20and%20standard%20Error.pdf)
 
 
-How about a yummy crepe?
+![Probability](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Probability%20.pdf)
 
-![Crepe](https://s3-media3.fl.yelpcdn.com/bphoto/cQ1Yoa75m2yUFFbY2xwuqw/348s.jpg)
+![Normal Curve](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Normal%20curve%20.pdf)
 
-It can also be centered!
 
-![Crepe](https://s3-media3.fl.yelpcdn.com/bphoto/cQ1Yoa75m2yUFFbY2xwuqw/348s.jpg){: .mx-auto.d-block :}
+![Hypothesis Testing](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Hothesis%20Testing.pdf)
 
-Here's a code chunk:
 
-~~~
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-~~~
 
-And here is the same code with syntax highlighting:
+![Chi-Square Test](https://github.com/elainekjchiu/Notes/blob/main/Intro%20to%20Statistical%20Methods/Chi%20squared%20test.pdf)
 
-```javascript
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-```
 
-And here is the same code yet again but with line numbers:
 
-{% highlight javascript linenos %}
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-{% endhighlight %}
 
-## Boxes
-You can add notification, warning and error boxes like this:
 
-### Notification
 
-{: .box-note}
-**Note:** This is a notification box.
 
-### Warning
 
-{: .box-warning}
-**Warning:** This is a warning box.
 
-### Error
-
-{: .box-error}
-**Error:** This is an error box.
