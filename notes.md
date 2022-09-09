@@ -1,11 +1,11 @@
 ---
 layout: page
 title: Notes  
-subtitle:Intro to Statistical Methods  
-
+subtitle: 
 ---
-You can find some notes for Introductory level of statistics classes here.  
+You can find some notes for statistics classes here.   
 
+### Introductory Level Statistics  
 
 [Graphical Summary of Data](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/master/Graphical%20Summary%20of%20data.pdf){: .mx-auto.d-block :}
 
