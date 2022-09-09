@@ -1,6 +1,8 @@
 ---
 layout: page
-title: Intro to Statistical Methods Notes  
+title: Notes  
+subtitle:Intro to Statistical Methods  
+
 ---
 You can find some notes for Introductory level of statistics classes here.  
 
