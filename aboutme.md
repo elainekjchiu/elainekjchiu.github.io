@@ -15,7 +15,7 @@ I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cook
   
    
    
-![Dish1](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/5b861d336877a4ab21d2d61347c404e4bbb5e407/assets/img/Dish1.jpg)
+![Dish1](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/c55bf440c7f80a9b741921a1558d9b1cad068549/assets/img/Dish1.jpg)
 ![Dish2](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/70aa4453522fcf013a5eca799891cd16df875418/assets/img/Dish2.jpg)
 ![Dish3](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/70aa4453522fcf013a5eca799891cd16df875418/assets/img/Dish3.jpg)
 
