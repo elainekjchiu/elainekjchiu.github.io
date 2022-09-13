@@ -24,3 +24,10 @@ You can find some notes for statistics classes here.
 [Past Exam 2](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/master/Midterm_2_Review.pdf){: .mx-auto.d-block :}
 
 
+### Bayesian Inference  
+[Bayesian Probability Review](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Bayesian%20probability%20Review%20.pdf)
+
+[Variable Selection](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Variable%20Selection%20.pdf)
+
+[Variational Inference](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Variational%20Inference.pdf)
+
