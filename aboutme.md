@@ -24,8 +24,7 @@ I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cook
      
 ![Dish1](Dish1.jpg)
   
-![Dish2](Dish2.jpg)
-  
+![Dish2](Dish2.jpg)  
 ![Dish3](Dish3.jpg)
 
 
