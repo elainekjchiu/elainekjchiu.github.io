@@ -25,9 +25,9 @@ You can find some notes for statistics classes here.
 
 
 ### Bayesian Inference  
-[Bayesian Probability Review](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Bayesian%20probability%20Review%20.pdf)
+[Bayesian Probability Review](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/e498efe16f61f4f65a14a55cb17c39ea85245d5f/Bayesian%20probability%20Review%20.pdf)
 
-[Variable Selection](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Variable%20Selection%20.pdf)
+[Variable Selection](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/e498efe16f61f4f65a14a55cb17c39ea85245d5f/Variable%20Selection%20.pdf)
 
-[Variational Inference](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/87edbfbe0a72ea91f3e8bb17eadca3aeac57b802/Bayesian%20Inference/Variational%20Inference.pdf)
+[Variational Inference](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/e498efe16f61f4f65a14a55cb17c39ea85245d5f/Variational%20Inference.pdf)
 
