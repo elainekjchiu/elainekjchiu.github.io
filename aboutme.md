@@ -7,9 +7,10 @@ subtitle:
 ### My Backgroud  
 My name is Elaine Chiu, and I am currently a Ph.D. student in statistics at the University of Wisconsin-Madison. After obtaining my Bachelor's degree in economics with a minor in political science from National Taiwan University., I came to the U.S.A. for my master's in statistics at the University of Washington. I also enjoyed the cherry blossom there. 
 
-  
-<p align="center" width="100%"><img width="33%" src="cherry_UW.png"> 
- </p>  
+  <p align="center">
+  <img width="460" height="300" src="https://github.com/elainekjchiu/elainekjchiu.github.io/blob/2e446b199e2e331642a893c68018d7daf64d846b/cherry_UW.png">
+</p>
+
    
   
 I am curious to see how statistics can push the boundary of knowledge. To see more details about my background, you can check my [cv](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/master/Elaine_work_CV1.pdf).  
