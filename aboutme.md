@@ -8,7 +8,7 @@ subtitle:
 My name is Elaine Chiu, and I am currently a Ph.D. student in statistics at the University of Wisconsin-Madison. After obtaining my Bachelor's degree in economics with a minor in political science from National Taiwan University., I came to the U.S.A. for my master's in statistics at the University of Washington. I also enjoyed the cherry blossom there. 
 
 <p align="center" width="100%">
- <img width="33%" src="https://github.com/elainekjchiu/elainekjchiu.github.io/blob/55d7e0f0575fceddf04dd9ee5b9fd5c705ca3df2/assets/img/cherry_UW.png"> 
+ <img width="33%" src="https://github.com/elainekjchiu/elainekjchiu.github.io/blob/4a1718ed43cf67f4d38e7fdd8126dd7966981e65/cherry_UW.png"> 
  </p>
 
 I am curious to see how statistics can push the boundary of knowledge. To see more details about my background, you can check my [cv](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/master/Elaine_work_CV1.pdf).  
@@ -21,9 +21,9 @@ I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cook
   
    
    
-![Dish1](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/c55bf440c7f80a9b741921a1558d9b1cad068549/assets/img/Dish1.jpg)
-![Dish2](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/70aa4453522fcf013a5eca799891cd16df875418/assets/img/Dish2.jpg)
-![Dish3](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/70aa4453522fcf013a5eca799891cd16df875418/assets/img/Dish3.jpg)
+![Dish1](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/4a1718ed43cf67f4d38e7fdd8126dd7966981e65/Dish1.jpg)
+![Dish2](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/4a1718ed43cf67f4d38e7fdd8126dd7966981e65/Dish2.jpg)
+![Dish3](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/4a1718ed43cf67f4d38e7fdd8126dd7966981e65/Dish3.jpg)
 
 
 
