@@ -46,8 +46,8 @@ round-avatar: true
 # Select the social network links that you want to show in the footer.
 # Uncomment the links you want to show and add your information to each one.
 social-network-links:
-  email: chiukuanjung@gmail.com
-  #rss: true  # remove this line if you don't want to show an RSS link at the bottom
+  email: "chiukuanjung@gmail.com"
+  rss: true  # remove this line if you don't want to show an RSS link at the bottom
   #facebook: Elaine Chiu   
   github: elainekjchiu
   #twitter: daattali
@@ -55,7 +55,7 @@ social-network-links:
   #youtube: c/daattali
 #  medium: yourname
 #  reddit: yourname
-linkedin: www.linkedin.com/in/elaine-chiu-231767181
+   linkedin: www.linkedin.com/in/elaine-chiu-231767181
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
