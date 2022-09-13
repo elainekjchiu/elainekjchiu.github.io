@@ -7,7 +7,7 @@ subtitle:
 ### My Backgroud  
 My name is Elaine Chiu, and I am currently a Ph.D. student in statistics at the University of Wisconsin-Madison. After obtaining my Bachelor's degree in economics with a minor in political science from National Taiwan University., I came to the U.S.A. for my master's in statistics at the University of Washington. I also enjoyed the cherry blossom there. 
     
-![Cherry_UW](cherry_UW.png#center)
+![Cherry_UW](cherry_UW.png){: .mx-auto.d-block :}
 
    
   
