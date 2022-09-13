@@ -7,10 +7,11 @@ subtitle:
 ### My Backgroud  
 My name is Elaine Chiu, and I am currently a Ph.D. student in statistics at the University of Wisconsin-Madison. After obtaining my Bachelor's degree in economics with a minor in political science from National Taiwan University., I came to the U.S.A. for my master's in statistics at the University of Washington. I also enjoyed the cherry blossom there. 
 
+  
 <p align="center" width="100%">
  <img width="33%" src="cherry_UW.png"> 
  </p>
-
+  
 I am curious to see how statistics can push the boundary of knowledge. To see more details about my background, you can check my [cv](https://github.com/elainekjchiu/elainekjchiu.github.io/blob/master/Elaine_work_CV1.pdf).  
 
 ### My Interests in Statistics  
@@ -20,9 +21,11 @@ I am mostly fascinated by the versatile nature of Bayesian modeling and now lear
 I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cooking during my leisure time. I believe tasting food is one of the best ways to learn someone's culture. Furthermore, being able to make food empowers us to take care of our health. Here are some dishes I made!  
   
    
-   
+     
 ![Dish1](Dish1.jpg)
+  
 ![Dish2](Dish2.jpg)
+  
 ![Dish3](Dish3.jpg)
 
 
