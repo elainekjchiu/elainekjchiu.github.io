@@ -19,10 +19,7 @@ I am mostly fascinated by the versatile nature of Bayesian modeling and now lear
 ### My Culture and Hobbies
 I was born in Taiwan, a place with wonderful people and tasty food. I enjoy cooking during my leisure time. I believe tasting food is one of the best ways to learn someone's culture. Furthermore, being able to make food empowers us to take care of our health. Here are some dishes I made!  
   
-    
-![Dish1](Dish1.jpg)
-![Dish2](Dish2.jpg)
-![Dish3](Dish3.jpg)
+![Dish1](Dish1.jpg)![Dish2](Dish2.jpg)![Dish3](Dish3.jpg)  
 
 
 
