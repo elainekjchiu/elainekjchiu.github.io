@@ -1,3 +1,9 @@
+---
+layout: page
+title: Project
+subtitle: Detecting Heterogeneous Treatment Effects with Matching and Instrumental Variable  
+---
+
 The causal inference project I am working on aims to answer if the Medicaid health insurance plan reopened in Oregon during 2008 has the positive causal effect on residents' mental and physical health. 
 From this study, the method to detect heterogeneous causal effect with instrumental variable is also developed.   
 
@@ -26,5 +32,11 @@ sure the assignment of treatment is unrelated to the potential outcomes. A teniq
 the similarities of the covariates, which might be confounders, and assignment treatment or control to these paired recipients and observe the difference
 between their responses.  However, this technique can only deal with the confounding effects coming from obeserved covariates. For those unobserved covariates
 , we cannot do matching based on those. Consequently, this study also considers the use of instrumental variable.  Instrumental variable is an approach to analysize
-causal effects when unmeasured confounding is present. Consider the following causal graph.  
+causal effects when unmeasured confounding is present. Consider the following causal graph.    
+
+![IV Causal Graph](IV.jpg){: .mx-auto.d-block :}  
+
+T is the treatment variable, Y is the outcome variable, U stands for the unobserved confounder, and Z is the instrumental variable.  Because the confounder is 
+unobserved, we cannnot block the spurious association path via conditioning. Instrumental variable approach proposes that we first measure the covariance between
+Z and Y, for this to detect the causal effect from Z to Y via the path Z -> T -> Y, and then divide this by the covariance between Z and T. 
 
