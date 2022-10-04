@@ -34,7 +34,7 @@ between their responses.  However, this technique can only deal with the confoun
 , we cannot do matching based on those. Consequently, this study also considers the use of instrumental variable.  Instrumental variable is an approach to analysize
 causal effects when unmeasured confounding is present. Consider the following causal graph.    
 
-![IV Causal Graph](IV.jpg){: .mx-auto.d-block :}  
+![IV Causal Graph](IV.jpg)
 
 T is the treatment variable, Y is the outcome variable, U stands for the unobserved confounder, and Z is the instrumental variable.  Because the confounder is 
 unobserved, we cannnot block the spurious association path via conditioning. Instrumental variable approach proposes that we first measure the covariance between
