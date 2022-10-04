@@ -23,6 +23,7 @@ author: Elaine
 navbar-links:
   About Me: "aboutme"
   Notes: "notes"
+  Causal Inference: "project" 
 ################
 # --- Logo --- #
 ################
