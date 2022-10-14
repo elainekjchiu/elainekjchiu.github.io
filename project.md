@@ -36,7 +36,25 @@ causal effects when unmeasured confounding is present. Consider the following ca
 
 ![IV Causal Graph](IV.jpg)
 
-T is the treatment variable, Y is the outcome variable, U stands for the unobserved confounder, and Z is the instrumental variable.  Because the confounder is 
-unobserved, we cannnot block the spurious association path via conditioning. Instrumental variable approach proposes that we first measure the covariance between
-Z and Y, for this to detect the causal effect from Z to Y via the path Z -> T -> Y, and then divide this by the covariance between Z and T. 
+$T$ is the treatment variable, $Y$ is the outcome variable, $U$ stands for the unobserved confounder, and $Z$ is the instrumental variable.  Because the confounder is unobserved, we cannnot block the spurious association path via conditioning. Instrumental variable approach proposes that we first measure the covariance between
+$Z$ and $Y$, for this to detect the causal effect from $Z$ to $Y$ via the path $Z \rightarrow T \rightarrow Y$, and then divide this by the covariance between $Z$ and $T$.   
+
+## Before the Identification of Causal Effect - Assumptions  for Instrumental Variables, and why to use them?  
+Recall that based on the causal graph above, we want to find the causal effect from the treatment $A$ to outcome variable $Y$. However, we suspect that there are unmeasured cofounders $U$. Because $U$ is unmeasured, we cannot condition on $U$ to identify our causal estimand.  We turn to the use of instrument $Z$.  While we escape from the unmeasured variable problem by avoiding using adjustment for confounders. We need another set of assumptions for instrumental variable $Z$.   
+
+### Assumptions
+
+- i
+Instrument $Z$ is associate with treatment $A$.  
+- ii
+ $Z$ does not affect $Y$ except through its potential effect on treatment $A$.
+- iii
+Instrument $Z$ and outcome $Y$ do not share any common causes.  
+- iv Monotonicity
+Instrument $Z$ only increases the level of treatment $A$. This is an important assumption to allow us identify the causal estimand. We detail the assumption of monotonicity below.   
+Imagine that $Z$ can be seen as a "encouragement" variable might urge an individual to take the treatment. $Z=0$ means the individual is not encouraged to take the treatment $A=1$, and $Z=1$ means the individual receives the encouragment to take the treatment $A=1$.  Some examples are:  
+- $Z$ is a higher pricing on cigaratte, and $A$ is the cessation of smoking.  
+- $Z$ is a shorter distance to the clinic, and $A$ is to go to see the doctor.  
+We can define potential treatment taken by the indvidual as a function of the instrument. For example, $A^{Z=1} = 1$ means that this individual, after receiving the 
+encouragement. $A^{Z=0} = 1$ means even if the individual does
 
