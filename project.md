@@ -53,8 +53,16 @@ Instrument $Z$ and outcome $Y$ do not share any common causes.
 - iv Monotonicity
 Instrument $Z$ only increases the level of treatment $A$. This is an important assumption to allow us identify the causal estimand. We detail the assumption of monotonicity below.   
 Imagine that $Z$ can be seen as a "encouragement" variable might urge an individual to take the treatment. $Z=0$ means the individual is not encouraged to take the treatment $A=1$, and $Z=1$ means the individual receives the encouragment to take the treatment $A=1$.  Some examples are:  
-- $Z$ is a higher pricing on cigaratte, and $A$ is the cessation of smoking.  
-- $Z$ is a shorter distance to the clinic, and $A$ is to go to see the doctor.  
-We can define potential treatment taken by the indvidual as a function of the instrument. For example, $A^{Z=1} = 1$ means that this individual, after receiving the 
-encouragement. $A^{Z=0} = 1$ means even if the individual does
+    * $Z$ is a higher pricing on cigaratte, and $A$ is the cessation of smoking.  
+    * $Z$ is a shorter distance to the clinic, and $A$ is to go to see the doctor.  
+We can define potential treatment taken by the indvidual as a function of the instrument. For example, $A^{Z=1} = 1$ means that this individual would take the treatment, after receiving the encouragement. $A^{Z=0} = 1$ means even if the individual does receive the encouragement to take the treatment, he would refuse the take the treatment.  Based on this notation, we can have four subpopulations based on their behavior in terms of the compliance.   
+    * Always-takers:  
+      Individuals who will always take teratment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 1 = A^{Z=0}$.  
+    * Never-takers:  
+      Individuals who will never take treatment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 0 = A^{Z=0}$.  
+    * Compliers:  
+    Individuals who would take the treatment based on what they were encouraged to. That is, $A^{Z=1} = 1$; $A^{Z=0} = 0$.  
+    * Defiers:  
+    Individuals who would would take the other treatment as opposed to what they were encouraged to. That is, $A^{Z=1}=0$; $A^{Z=0}=1$.  
+    
 
