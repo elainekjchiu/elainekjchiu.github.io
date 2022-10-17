@@ -44,25 +44,37 @@ Recall that based on the causal graph above, we want to find the causal effect f
 
 ### Assumptions
 
-- i
+#### i
 Instrument $Z$ is associate with treatment $A$.  
-- ii
+#### ii
  $Z$ does not affect $Y$ except through its potential effect on treatment $A$.
-- iii
+#### iii
 Instrument $Z$ and outcome $Y$ do not share any common causes.  
-- iv Monotonicity
+#### iv Monotonicity
 Instrument $Z$ only increases the level of treatment $A$. This is an important assumption to allow us identify the causal estimand. We detail the assumption of monotonicity below.   
 Imagine that $Z$ can be seen as a "encouragement" variable might urge an individual to take the treatment. $Z=0$ means the individual is not encouraged to take the treatment $A=1$, and $Z=1$ means the individual receives the encouragment to take the treatment $A=1$.  Some examples are:  
-    * $Z$ is a higher pricing on cigaratte, and $A$ is the cessation of smoking.  
-    * $Z$ is a shorter distance to the clinic, and $A$ is to go to see the doctor.  
-We can define potential treatment taken by the indvidual as a function of the instrument. For example, $A^{Z=1} = 1$ means that this individual would take the treatment, after receiving the encouragement. $A^{Z=0} = 1$ means even if the individual does receive the encouragement to take the treatment, he would refuse the take the treatment.  Based on this notation, we can have four subpopulations based on their behavior in terms of the compliance.   
-    * Always-takers:  
-      Individuals who will always take teratment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 1 = A^{Z=0}$.  
-    * Never-takers:  
-      Individuals who will never take treatment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 0 = A^{Z=0}$.  
-    * Compliers:  
-    Individuals who would take the treatment based on what they were encouraged to. That is, $A^{Z=1} = 1$; $A^{Z=0} = 0$.  
-    * Defiers:  
-    Individuals who would would take the other treatment as opposed to what they were encouraged to. That is, $A^{Z=1}=0$; $A^{Z=0}=1$.  
-    
+ * $Z$ is a higher pricing on cigaratte, and $A$ is the cessation of smoking.  
+ * $Z$ is a shorter distance to the clinic, and $A$ is to go to see the doctor.  
 
+We can define potential treatment taken by the indvidual as a function of the instrument. For example, $A^{Z=1} = 1$ means that this individual would take the treatment, after receiving the encouragement. $A^{Z=0} = 1$ means even if the individual does receive the encouragement to take the treatment, he would refuse the take the treatment.  Based on this notation, we can have four subpopulations based on their behavior in terms of the compliance.   
+  * Always-takers:  
+      Individuals who will always take teratment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 1 = A^{Z=0}$.  
+  * Never-takers:  
+      Individuals who will never take treatment, regardless of the treatment group they were assigned to. That is, $A^{Z=1} = 0 = A^{Z=0}$.  
+  * Compliers:  
+    Individuals who would take the treatment based on what they were encouraged to. That is, $A^{Z=1} = 1$; $A^{Z=0} = 0$.  
+  * Defiers:  
+    Individuals who would would take the other treatment as opposed to what they were encouraged to. That is, $A^{Z=1}=0$; $A^{Z=0}=1$.   
+  
+  Note that these subpopulations are not identifiable. For example, if you encourage an individual to take the treatment and he did, he could be either an always-taker or a complier.  
+ > When no defiers exist, we say that there is monotonicity because the instrument $Z$ either does not change the level of treatment $A$ or increases the level of treatment $A$.  
+    
+Generally, monotonicity holds when $A^{Z=1} \geq A^{Z=0}$ for all individuals.  
+
+## The Identification of The causal Estimand - The Average Treatment Effect of Compliers  
+We now want to show that we can identify the the average treatment effect of compliers, $\mathbb{E}(Y^{a=1} - Y^{a=0}|A^{Z=1}=1, A^{Z=0}=0)$.  
+In particular, we want to show that, provided that we have the four assumptions, we have:  
+
+$$
+\mathbb{E}(Y^{a=1} - Y^{a=0}|A^{Z=1}=1, A^{Z=0}=0) = \frac{\mathbb{E}(Y|Z=1) - \mathbb{E}(Y|Z=0)}{\mathbb{E}(A|Z=1) - \mathbb{E}(A|Z=0)}
+$$
