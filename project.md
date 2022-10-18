@@ -72,9 +72,90 @@ We can define potential treatment taken by the indvidual as a function of the in
 Generally, monotonicity holds when $A^{Z=1} \geq A^{Z=0}$ for all individuals.  
 
 ## The Identification of The causal Estimand - The Average Treatment Effect of Compliers  
-We now want to show that we can identify the the average treatment effect of compliers, $\mathbb{E}(Y^{a=1} - Y^{a=0}|A^{Z=1}=1, A^{Z=0}=0)$.  
+We now want to show that we can identify the the average treatment effect of compliers. Define the following notatations.  
+Let $Y$ be the outcome variable, $A$ be the treatment variable, $Z$ be the instrument.  Furthermore, through our derivation, we use the superscript to denote the 
+potential outcome under specific intervention. Recall that $A^{Z=0}$ is the potential treatment that an individual would take if we intervene to make the instrument $Z = 0$. Similar to this notation, $Y^{A=a}$ means the potential outcome when the individual takes the treatment $A=a$; $Y^{Z=0}$ means the potential outcome when the individual receives the instrument, $Z=0$. As a sidenote, one should always remember the differences between $Y^{A=1}$, $Y|A=1$, $Y^{A=0}|A=1$, and $Y^{A=1}|A=1$. In general, the conditioning shows if the individual receives the treatment or not in real life, while the potential outcome imagines a parallel universe, consider the outcome when the same individual receives a specific treatment.
+
+* $Y^{A=1}$ means the potential outcome of this individual when he receives treatment $A=1$.  
+* $Y|A=1$ means the outcome value when an individual receives the treatment $A=1$ in real life.  
+* $Y^{A=0}|A=1$ means that we wonder the potential outcome value assuming this individual receives treatment $A=0$, while he receives treatment $A=1$ in real life.  
+* $Y^{A=1}|A=1$ means that we wonder the potential outcome value assuming this individual receives treatment $A=1$, while he indeed receives treatment $A=1$ in real life.  
+
+With these notations, we want to identify the average treatment effect of compliers.
+
+$$
+\mathbb{E}(Y^{a=1} - Y^{a=0}|A^{Z=1}=1, A^{Z=0}=0)
+$$
+  
 In particular, we want to show that, provided that we have the four assumptions, we have:  
 
 $$
 \mathbb{E}(Y^{a=1} - Y^{a=0}|A^{Z=1}=1, A^{Z=0}=0) = \frac{\mathbb{E}(Y|Z=1) - \mathbb{E}(Y|Z=0)}{\mathbb{E}(A|Z=1) - \mathbb{E}(A|Z=0)}
+$$
+
+$$
+\begin{align}
+\mathbb{E}(Y^{Z=1} - Y^{Z=0}) &= \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0}=1) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=1) \text{    (always-takers)} \\
+& + \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=0, A^{Z=0}=0) \mathbb{P}(A^{Z=1}=0, A^{Z=0}=0)  \text{    (never-takers)}\\
+& + \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0}=0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0) \text{    (compliers)}\\
+& + \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=0, A^{Z=0}=1) \mathbb{P}(A^{Z=1}=0, A^{Z=0}=1) \text{    (defiers)}\\
+& = \mathbb{E}(Y^{A=1} - Y^{A=1})\cdot \mathbb{P}(A^{Z=1}=1, A^{Z=0}=1) \\
+& + \mathbb{E}(Y^{A=0} - Y^{A=0}) \cdot  \mathbb{P}(A^{Z=1}=0, A^{Z=0}=0) \\
+& +  \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0}=0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0) \\
+& +  \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=0, A^{Z=0}=1) \mathbb{P}(A^{Z=1}=0, A^{Z=0}=1) \\
+& = 0 \cdot \mathbb{P}(A^{Z=1}=1, A^{Z=0}=1) \\
+& + 0  \cdot  \mathbb{P}(A^{Z=1}=0, A^{Z=0}=0) \\
+& +  \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0}=0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0) \\
+& +  \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=0, A^{Z=0}=1) \cdot 0 \\
+& = \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0}=0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0)  \\
+\end{align}
+$$
+
+The first equality comes from that for always-takers and never-takers, the instrument $Z$ does not have any impact on the treatment they take. The second equality comes from we assume there is no defier in the population.  
+As a result, we obtain that:
+
+$$
+\mathbb{E}(Y^{Z=1} - Y^{Z=0}) = \mathbb{E}(Y^{Z=1} - Y^{Z=0}|A^{Z=1}=1, A^{Z=0} = 0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0)
+$$
+
+Furthermore, recall that under our assumptions, in the subpopulation of compliers, the effect of $Z$ on $Y$ equals the effect of $A$ on $Y$, because $Z=A$, and also we assume for $Z$ to be an instrument, the effect of $Z$ on $Y$ only passes through $A$.  Consequently, 
+
+$$
+\mathbb{E}(Y^{Z=1} - Y^{Z=0}| A^{Z=1} = 1, A^{Z=0} = 0) = \mathbb{E}(Y^{A=1} - Y^{A=0}|A^{Z=1}=1, A^{Z=0}=0)
+$$
+
+With this realization, we have:  
+
+$$
+\begin{align}
+& \mathbb{E}(Y^{Z=1} - Y^{Z=0}) = \mathbb{E}(Y^{A=1} - Y^{A=0}|A^{Z=1}=1, A^{Z=0} = 0) \mathbb{P}(A^{Z=1}=1, A^{Z=0}=0) \\
+& \mathbb{E}(Y^{A=1} - Y^{A=0}|A^{Z=1}=1, A^{Z=0}=0) = \frac{\mathbb{E}(Y^{Z=1} - Y^{Z=0})}{ \mathbb{P}(A^{Z=1}=1, A^{Z=0} = 0)} \\
+\end{align}
+$$
+
+Under our assumption that $Z$ is random, we have that $Z$ is independent of $A^Z$ or $Y^A$.  
+
+$$
+\mathbb{E(Y^{Z=1} - Y^{Z=0})} = \mathbb{E}(Y^{Z=1}) - \mathbb{E}(Y^{Z=0}) = \mathbb{E}(Y^{Z=1}|Z=1) - \mathbb{E}(Y^{Z=0}|Z=0)
+$$
+
+By $Z$ is random and consistency.  
+
+As for the simplification of the proportion of compliers in the population:  
+
+$$
+\begin{align}
+\mathbb{P}(A^{Z=1}=1, A^{Z=0} = 0) & = \mathbb{P}(A^{Z=1}=1) - \mathbb{P}(A^{Z=1}=1, A^{Z=0}=1) \\
+& = \mathbb{P}(A^{Z=1}=1) - \mathbb{P}(A^{Z=0}=1) - \mathbb{P}(A^{Z=0}=1, A^{Z=1}=0) \\
+& = \mathbb{P}(A^{Z=1}=1) - \mathbb{P}(A^{Z=0}=1)\text{    because we asssume no defiers} \\
+& = \mathbb{P}(A^{Z=1}=1|Z=1) - \mathbb{P}(A^{Z=0}=1|Z=0)\text{    because we have } Z \text{ independent of } A^Z \\
+& = \mathbb{P}(A=1|Z=1) - \mathbb{P}(A=1|Z=0)\text{    By Consistency} \\
+\end{align}
+$$
+
+In the special case that $A$ is binary that $A  \in$ { $0$ , $1$} , $\mathbb{P}(A=1|Z=1) = \mathbb{E}(A=1|Z=1)$; $\mathbb{P}(A=1|Z=0) = \mathbb{E}(A|Z=0)$.  
+Finally, we identify that:  
+
+$$
+\mathbb{E}(Y^{A=1} - Y^{A=0}|A^{Z=1}=1, A^{Z=0}=0) = \frac{\mathbb{E}(Y|Z=1) - \mathbb{E}(Y|Z=0)}{\mathbb{E}(A|Z=1) - \mathbb{E}(A|Z=0)}
 $$
