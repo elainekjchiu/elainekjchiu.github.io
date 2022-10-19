@@ -71,7 +71,7 @@ Generally, monotonicity holds when $A^{Z=1} \geq A^{Z=0}$ for all individuals.
 
 ## The Identification of The causal Estimand - The Average Treatment Effect of Compliers  
 We now want to show that we can identify the the average treatment effect of compliers. Define the following notatations.  
-Let $Y$ be the outcome variable, $A$ be the treatment variable, $Z$ be the instrument.  Furthermore, through our derivation, we use the superscript to denote the 
+Let $$Y$$ be the outcome variable, $$A$$ be the treatment variable, $$Z$$ be the instrument.  Furthermore, through our derivation, we use the superscript to denote the 
 potential outcome under specific intervention. Recall that $A^{Z=0}$ is the potential treatment that an individual would take if we intervene to make the instrument $Z = 0$. Similar to this notation, $Y^{A=a}$ means the potential outcome when the individual takes the treatment $A=a$; $Y^{Z=0}$ means the potential outcome when the individual receives the instrument, $Z=0$. As a sidenote, one should always remember the differences between $Y^{A=1}$, $Y|A=1$, $Y^{A=0}|A=1$, and $Y^{A=1}|A=1$. In general, the conditioning shows if the individual receives the treatment or not in real life, while the potential outcome imagines a parallel universe, consider the outcome when the same individual receives a specific treatment.
 
 * $Y^{A=1}$ means the potential outcome of this individual when he receives treatment $A=1$.  
