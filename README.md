@@ -10,6 +10,10 @@
 
 **If you enjoy Beautiful Jekyll, please consider [supporting me](https://github.com/sponsors/daattali) for over 5 years of development (and to unlock rewards!) ❤**
 
+
+$$
+\sqrt{5}
+$$
 ## Table of contents
 
 - [Features](#features)
