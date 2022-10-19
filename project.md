@@ -1,7 +1,5 @@
 ---
-layout: page
-title: Project
-subtitle: Detecting Heterogeneous Treatment Effects with Matching and Instrumental Variable  
+
 ---
 
 The causal inference project I am working on aims to answer if the Medicaid health insurance plan reopened in Oregon during 2008 has the positive causal effect on residents' mental and physical health. 
