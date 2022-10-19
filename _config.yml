@@ -265,6 +265,7 @@ defaults:
       comments: true  # add comments to all blog posts
       social-share: true # add social media sharing buttons to all blog posts
       ext-js: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
+
   -
     scope:
       path: "" # any file that's not a post will be a "page" layout by default
@@ -280,7 +281,6 @@ exclude:
   - LICENSE
   - README.md
   - screenshot.png
-  - project.md
   - docs/
 
 plugins:
