@@ -1,7 +1,8 @@
 ---
-
+layout: page
+title: About me
+subtitle: 
 ---
-
 The causal inference project I am working on aims to answer if the Medicaid health insurance plan reopened in Oregon during 2008 has the positive causal effect on residents' mental and physical health. 
 From this study, the method to detect heterogeneous causal effect with instrumental variable is also developed.   
 
