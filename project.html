@@ -767,6 +767,12 @@ the data set can be found here.</p>
 \frac{\mathbb{E}(Y|Z=1)  - \mathbb{E}(Y|Z=0)}{\mathbb{E}(A|Z=1) -
 \mathbb{E}(A|Z=0)}
 \]</span></p>
+<p>The use of instrumental variable gave us this convenience that we do
+not need to do backdoor adjustment. Therefore, I would simply use the
+sample mean of each stratum to estimate the conditional expectation. We
+have around <span class="math inline">\(2000\)</span> as our sample
+size. The estimation is presented, with the options to show the hidden
+codes.</p>
 <pre class="r fold-hide"><code>library(haven)
 lottery.Data = read_dta(&quot;C:/Users/Patron/Desktop/OHIE_Public_Use_Files/OHIE_Data/oregonhie_descriptive_vars.dta&quot;)
 
@@ -842,8 +848,9 @@ variable was constructed from the sum of the answers to questions 88-95
 follows: - Not at all=0<br />
 - Several days=1<br />
 - More than half the days=2<br />
-- Nearly every day=3. Our method shows an increase of this score because
-of the enrollment of insurance.</p>
+- Nearly every day=3.</p>
+<p>Our method shows an increase of this score because of the enrollment
+of insurance.</p>
 <pre class="r fold-hide"><code># Consider using another response phqtot_inp, which is a measure of depression symptom, the higher the more a person shows depression 
 # we get rid of the rows with NA in phqtot_inp
 
