@@ -929,7 +929,12 @@ packages and results targeting outcome regressions. That is, to get our
 numerator, the quantity:</p>
 <p><span class="math display">\[\mathbb{E}(Y|Z=1) -
 \mathbb{E}(Y|Z=0)\]</span></p>
-<p>We can obtain by running a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(Z\)</span>.</p>
+<p>We can obtain by running a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(Z\)</span>. As for the denominator, since it is
+not a causal quantity. The denominator is simply the proportion of
+compliers in the population, and the only requirement is <span class="math inline">\(Z\)</span>, the instrumental variable, is
+independent of <span class="math inline">\(A^z\)</span>, the potential
+treatment <span class="math inline">\(A\)</span> given <span class="math inline">\(Z=z\)</span>. This independence is ensured by the
+lottery system.</p>
 <p>Now I get into our sensitivity analysis and introduce some common
 forms of bias.<br />
 Recall that the ignorability condition we impose to identify the causal
