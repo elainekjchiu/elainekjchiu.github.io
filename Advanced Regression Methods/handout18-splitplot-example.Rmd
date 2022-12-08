@@ -1,0 +1,76 @@
+---
+title: "Split Plot analysis with R"
+#author: "Cécile Ané"
+#date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.height=2.5, fig.width=6)
+options(show.signif.stars=FALSE, width=86)
+knitr::opts_knit$set(global.par=TRUE, html.table.attributes = '')
+```
+
+```{r, include=FALSE}
+par(mar=c(2.5,2.1,.5,.5), mgp=c(1.3,.1,0), tck=-0.01)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+dat = read.table("splitplot.txt", header=T,
+                 colClasses=c("factor","factor","factor","numeric"))
+dat$pan = with(dat, block:soil) # or call it "bench"
+with(dat,interaction.plot(var, soil, y, ylim=range(y)))
+with(dat, points(var, y, col=soil, pch=as.numeric(block)))
+legend("bottomright", pch=2:1, legend=levels(dat$block)[2:1])
+```
+```{r, message=F}
+library(lme4); library(lmerTest)
+fit = lmer(y ~ block + soil + var + soil:var + (1 | pan), dat)
+print(VarCorr(fit), comp=c("Variance","Std.Dev.")) # summary(fit)
+anova(fit)
+ls_means(fit, which="soil")
+lsm = ls_means(fit, which="soil", pairwise=TRUE); lsm
+show_tests(lsm) # shows which contrasts were used above
+ls_means(fit, which="var")
+```
+
+Why this standard error, and why this degree of freedom of 4.4?  
+Mean for variety 1 (say): from average over 2 blocks and 3 soils.
+It's standard error is then:
+
+```{r}
+sqrt((0.7628 + 0.6542)/6) # sqrt of (s2_epsilon + s2_delta) * 1/(2*3)
+```
+
+This estimated variance is a rescaled version of
+`MSWPError + (4-1) MSSPError = 4(s2_epsilon + s2_delta)`,
+so the Satterthwaite approximation will use:
+
+```{r}
+MSWPE = 0.6542 + 4*0.7628 # df = 2
+MSSPE = 0.6542 # df = 9
+dfsat = (MSWPE + 3*MSSPE)^2 / ( MSWPE^2/2 + (3*MSSPE)^2/9)
+dfsat # 4.4 degrees of freedom to approximate by a chi-square distribution
+```
+
+```{r}
+head(ls_means(fit, which = "soil:var"), n=2)
+head(ls_means(fit, which = "soil:var", pairwise=TRUE), n=4)
+```
+
+<br>
+<br>
+<br>
+<br>
+
+**Warning**: an alternative is the `multcomp` package.
+It uses a normal approximation to test contrasts and pairwise comparisons.
+This is very liberal for `soil` comparisons, for which df should
+be taken to be 2 (not infinite).
+
+```{r, message=F}
+library(multcomp)
+summary(glht(fit, linfct=mcp(soil="Tukey", interaction_average=T)))
+```

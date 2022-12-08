@@ -1,0 +1,410 @@
+---
+title: "4-by-4 factorial design"
+#author: "Cécile Ané"
+#date: ""
+output:
+    html_document:
+        theme: united
+        highlight: pygments
+        fig.height: 3
+        fig.width: 5
+        toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, comment=NA)
+options(show.signif.stars=FALSE)
+knitr::opts_knit$set(global.par=TRUE, html.table.attributes = '')
+options(width=110)
+```
+
+```{r, include=FALSE}
+par(mar=c(2.1,2.1,.5,1.5), mgp=c(1.3,.3,0), tck=-0.01)
+```
+
+In an experiment with soybean, micronutrients were added to a fertilizer:
+copper (Cu) and/or manganeze (Mn) (values in % of fertilizer). Yield was then
+measured (kg/acre).
+
+```{r}
+soy = read.table("soybean.txt", header=T)
+```
+
+## predictors as factors
+
+Sometimes we will need to use `cu` as a numerical variable
+(to plot the data for instance), and sometimes as a factor with 4 categories
+(for the analysis), and similarly with `mn`.
+Below we define 2 new columns with the same data as in `cu` and `mn`, but
+considered as factors.
+
+```{r}
+soy$cu_factor = factor(soy$cu)
+soy$mn_factor = factor(soy$mn)
+str(soy)
+```
+
+The experiments used 4 levels of cu addition, and 4 levels of mn addition,
+with 2 plots for each combination:
+```{r}
+table(soy$cu, soy$mn)
+```
+
+Let's look at the data.
+We can also visualize and calculate the means at each combination:
+
+```{r, fig.height=2.5, fig.width=7}
+layout(matrix(1:2,1,2))
+plot(yield ~ cu, col=mn, pch=16, data=soy)
+with(soy, interaction.plot(cu, mn, yield))
+```
+
+```{r, message=F}
+library(dplyr)
+soy %>% group_by(cu, mn) %>% summarize(mean = mean(yield), sd = sd(yield))
+```
+
+```{r, include=FALSE}
+layout(1)
+```
+
+## analysis of variance
+
+Now to the formal analysis. It is extremely important to consider
+our two predictors as factors, to let each group have its own mean.
+Otherwise, and the mean for group cu=3 would be constrained to be half-way
+between the mean for group cu=1 and for group cu=5.
+
+```{r, fig.height=2.2, fig.width=4}
+fit = lm(yield ~ cu_factor * mn_factor, data=soy)
+plot(rstudent(fit)~fitted(fit), col=rgb(0,0,0, 0.5), pch=16,
+     xlab="fitted values", ylab="ext. studentized residuals")
+anova(fit)
+```
+
+In R, be really careful with this `anova` function: it returns the "type I"
+sums of squares, that is, when factors/predictors are added **sequentially**.
+Here, the design is balanced (n=2 in each treatment combination),
+so the type I and type III sums of squares are equal: the variance explained by
+each factor is the same whether it is added first or added last to the model.
+But in general, beware of the `anova` function: do not use it if you want to
+test a factor given that all others are in the model.
+
+A safe way to get p-values based on type III sums of squares is using the
+`drop1` function, which drops only 1 term at a time:
+```{r}
+drop1(fit, test="F")
+```
+
+Unfortunately (or fortunately), `drop1` respects the hierarchy principle, and it
+won't drop the term for "cu" if an interaction involving "cu" is present in the model.
+So here we only get the test for the interaction term.
+
+## testing main effects
+
+Why can't we test for main effects easily in R?
+We didn't get p-values for main effects with `drop1`,
+and we don't get them with `anova` unless the design is balanced
+(type I, or sequential SS).
+Here is why:
+
+- if there is an interaction:
+    * all terms in this interaction
+    should be considered as having an effect: no need for further testing.
+    * the "main" effects are not meaningful:
+    the main effect of a factor does not represent any of its simple effects
+- if there is no interaction,
+  then we can drop the interaction term from the model,
+  and testing main effects becomes easy.
+
+In our example the interaction is not significant,
+so we could consider dropping it
+to test each factor individually:
+
+```{r}
+fit.noint = lm(yield ~ cu_factor + mn_factor, data=soy)
+drop1(fit.noint, test="F")
+```
+
+However we changed the model: the interaction was removed, so the tests
+for the main effects have changed (notice the slightly different p-values):
+for instance, we tested "all α<sub>i</sub>=0 | μ, β<sub>j</sub>"
+instead of "all α<sub>i</sub>=0 | μ, β<sub>j</sub>, (αβ)<sub>ij</sub>".
+Many researchers would argue **against** removing the interaction from the model,
+even if it is not significant,
+because the experiment was designed as a 2-factorial CRD.
+
+## group means and treatment differences
+
+The estimated coefficients tell us about the estimated group means,
+but getting all the group means is not straightforward.
+```{r}
+summary(fit)$coefficients
+```
+
+- For example, the levels **cu=1** and **mn=20** do not appear
+  in the coefficient names.
+  They are the baseline levels,
+  with values of 0 for all dummy variables that represent
+  cu and mn. Do `model.matrix(fit)` to see these dummy variables.
+  So the mean yield in the baseline group, cu=1 and mn=20
+  is the intercept: 1526.50. Its standard error is given as 47.85, which
+  would allow us to get a confidence interval for instance (using a multiplier
+  from the t-distribution with dfError = 16 df).
+
+- For the group mean in group **cu=3 and mn=50**,
+  it's more complicated: we need to add
+  the intercept, the coefficient for cu=3, and coefficient for mn=50, and the
+  interaction coefficient for "cu=3 and mn=50": `1526.50+80+485.5+(-113)` = 1979.
+  But the coefficient table does not give the SE for this estimate.
+
+### using emmeans
+
+The package [emmeans](https://cran.r-project.org/web/packages/emmeans/)
+is the best to do inference in treament means,
+their pairwise differences, and other contrasts.
+It has great documentation,
+is very flexible (e.g. to models with random effects),
+and easier syntax than other packages to specify contrats.
+
+EMM stands for "estimated marginal means"
+(estimated from a fitted model),
+sometimes called adjusted means when the model has covariates.
+Let's look at treatment means first:
+
+
+```{r, message=F, warning=F, fig.height=2, fig.width=4}
+library(emmeans)
+emmeans(fit, ~ mn_factor)
+# emmeans(fit, ~ mn_factor | cu_factor) # same as below, presented differently
+emmeans(fit, ~ mn_factor:cu_factor)
+library(ggplot2)
+emmip(fit, mn_factor ~ cu_factor) + theme_minimal()  # ip = interaction plot
+```
+
+```{r, message=F, fig.height=1.5, fig.width=4.5}
+plot(emmeans(fit, ~ cu_factor))
+```
+
+```{r, fig.height=3, fig.width=5}
+plot(emmeans(fit, ~ cu_factor | mn_factor), by = "mn_factor")
+```
+
+by the way: why are all intervals of the same length?  
+Now, let's look at pairwise comparisons:
+
+```{r, message=F}
+em_cu = emmeans(fit, ~ cu_factor)
+pairs(em_cu) # default: Tukey
+pairs(em_cu, adjust = "none") # for LSD
+pwpm(em_cu, adjust = "none") # pw = pairwise pm = p-value matrix
+```
+```{r, message=F}
+em_cuxmn = emmeans(fit, ~ cu_factor:mn_factor)[1:10] # first 10 only: to fit page width
+pwpm(em_cuxmn)
+```
+
+Finally, let's consider a contrast other than a pairwise difference.
+Say, we want to see if the response at `cu=3` (averaged over the mn values)
+is the average between the mean at `cu=1` and at `cu=5` (again, averaged
+over the mn values). We find weak evidence against:
+
+```{r}
+contrast(em_cu,  list(cu3_vs1and5 = c(-1/2, 1,-1/2,0)))
+```
+## other functions and packages for comparisons
+
+Here are other tools that you may encounter, good to know about.
+But `emmeans` is the best so far, I think.
+
+### aov
+
+```{r, include=F}
+options(show.signif.stars=FALSE)
+```
+
+The function `aov` gives us another way to fit the same model (and get
+the same ANOVA table), and has many tools for post-hoc group comparisons,
+like Tukey's honest significant differences.
+But it is limited to simple designs, and balanced designs.
+
+```{r, include=FALSE}
+par(mar=c(2.1,2.1,2.5,1.5))
+```
+
+```{r, fig.height=1.8, fig.width=4}
+fit.aov = aov(yield ~ cu_factor * mn_factor, data=soy)
+anova(fit.aov)
+TukeyHSD(fit.aov, "cu_factor")
+plot(TukeyHSD(fit.aov, "cu_factor"))
+```
+
+Estimated group means are also easier to obtain
+after fitting the model with `aov`:
+```{r}
+model.tables(fit.aov, type="means", se=TRUE)
+```
+The last table gives SEs to calculate various things:
+
+- the **LSD** (least significant difference) values: to compare the overall
+means among cu groups at the 5% level, for instance, the LSD is `33.83 * 2.12 = 71.72`.
+Group means that differ by more than 71.72 would be said statistically different
+(but recall that LSD is liberal).
+The 2.12 is the t multiplier for 95% confidence, from 16 df (dfError):
+`qt(.975, df=16)` = `r round(qt(.975, df=16),3)`.
+So for instance, the means for `cu=1` and `cu=3` are not statistically different
+according to LSD: 2281.7 - 2224.1=`r 2281.7 - 2224.1`, which
+is less than 71.72.
+
+- test for **differences between means**:
+to compare the mean at `cu=3` versus `cu=1`, we would
+divide the observed difference in means, 57.6,
+by the standard error of this difference: 33.83 (last table in the output above).
+Note that this SE can be derived manually using
+the MSError (4579) and the formula for the variance of a contrast:
+`sqrt(4579*(1/8+1/8))` = `r round(sqrt(4579*(1/8+1/8)),2)`.
+So our t-value is 57.6/33.83 = `r round((2281.7 - 2224.1)/sqrt(4579*(1/8+1/8)),3)`,
+to be compared with a t-distribution with 16 df (error df):
+`pt(1.702, df=16, lower.tail=FALSE)*2`=`r round(pt(1.6, df=16, lower.tail=FALSE)*2,2)`.
+Again, the difference is not significant.
+
+- confidence interval for a **single mean**: we would follow a similar
+strategy. For the overal mean 2224.1 in groups `cu=1`, for example,
+the standard error of this mean is
+`sqrt(4579*(1/8))` = `r round(sqrt(4579*(1/8)),2)`.
+The t multiplier for 95% confidence is still 2.12 (16 df),
+so our confidence interval has limits 2224.1 $\pm$ 2.12 * 23.92.
+
+- confidence interval for the group cu=1 *and* mn=20.
+Here we would use the estimated mean in that group: 1526.5.
+Its standard error is calculated on the basis of only 2 observation for that group:
+`sqrt(4579*(1/2))` = `r round(sqrt(4579*(1/2)),2)`.
+
+- difference between the means in group "cu=1 and mn=20" and group "cu=3 and mn=20":
+same strategy as before, but the standard error for the difference of interest is 
+`sqrt(4579*(1/2 + 1/2))`, because each group only has 2 observations.
+In the output above, the last row of the last table is useful to
+determine the appropriate SE, based on which group(s) we
+are interested in and the sample size for that (those) groups.
+
+We can also get the "effects" that we need to add to the overall mean (intercept in the model).
+Using the course notations, these effects are the
+the α<sub>i</sub>, β<sub>j</sub> and (αβ)<sub>ij</sub> terms.
+Note that they do sum to zero, in each row and each column:
+```{r}
+model.tables(fit.aov) # default is type="effects"
+```
+
+
+### general contrasts using package `multcomp`
+
+```{r, message=F, warning=F}
+library(multcomp)
+```
+
+First, let's look at a very specific contrast:
+at `mn=20`, is the response to `cu=3`
+in between those at `cu=1` and `cu=5`?
+Warning: the coefficient named `cu_factor3`
+is the difference between `cu=3` and `cu=1`
+(etc.), so the contrast coefficient is 0 for the intercept, below.
+
+```{r}
+# coef(fit) # look at coefficients and what they mean, to define the constrast next
+K = matrix(c(0,-2,1, rep(0,13)), 1)
+t = glht(fit, linfct = K)
+summary(t)
+```
+
+testing main effect of `cu` using Tukey's HSD or Fisher's LSD:
+
+```{r}
+lh_cu = glht(fit, linfct = mcp(cu_factor="Tukey", interaction_average=T))
+summary(lh_cu) # p-values: for Tukey's HSD
+summary(lh_cu, test=univariate()) # no correction for multiple comparisons: Fisher LSD
+```
+
+applying Tukey's HSD to compare *all* 16 treatment means
+(try for yourself):
+
+```{r, warning=F, eval=F}
+soy$cuxmn = with(soy, interaction(cu, mn, sep = "x"))
+head(soy$cuxmn)
+fit2 = lm(yield ~ cuxmn, data=soy)
+lh2 = glht(fit2, linfct = mcp(cuxmn="Tukey"))
+summary(lh2)
+```
+
+### multiple comparisons using package `DescTools`
+
+and `aov` fit (try for yourself):
+
+```{r, eval=F}
+library(DescTools)
+PostHocTest(fit.aov, method = "lsd")
+PostHocTest(fit.aov, method = "scheffe")
+PostHocTest(fit.aov, method = "hsd")
+```
+
+
+## using specific contrasts as coefficients
+
+In our model `fit`, all levels except the first have
+their own coefficients. For each factor, the first level
+is the "base" level.
+The intercept corresponds to the mean yield when all the
+factors are at their "base" level.
+This parametrization of the design matrix and coefficient
+is said to use what's called, in R, the "treatment" contrasts.
+It facilitates pairwise comparisons between treatments.
+
+```{r}
+options()$contrasts # default is "contr.treatment"
+```
+
+A different parametrization is with the "sum" contrasts,
+where the `cu` coefficients are αᵢ with Σαᵢ = 0 for example.
+Because of the constraint that α's (and β's, γ's etc)
+sum to 0, R does not estimate the last αᵢ,
+here the coefficient associated with level `cu=7`.
+It takes it as the negative sum of the others:
+α₇ = -(α₁ + α₃ + α₅),
+using here the levels of `cu` to index the α coefficents.
+
+```{r}
+fit.sum = lm(yield ~ cu_factor * mn_factor, data=soy,
+             contrasts = list(cu_factor=contr.sum,
+                              mn_factor=contr.sum))
+summary(fit.sum)
+```
+
+
+With these "sum" contrasts,
+the intercept represents the mean of all group means,
+which is very nice.
+But getting individual group means is much more tedious.
+For example, to get the mean at `cu=3` (second level)
+and `mn=80` (third level):
+
+```{r, eval=F}
+2177.6562 + 104.0938 + 320.8438 + 41.9062 # 2644.5
+```
+
+Group means involving the last level for one or more factors
+are more complicated. For example, the mean yield at
+`cu=7` (last level) and `mn=20` (first level) is:
+
+```{r, eval=F}
+2177.6562 -(46.4687+104.0938+49.4688) + -675.4063 -(-22.2188+0.1563+27.2813) # 1297
+```
+
+An alternative way to fit the model with the "sum" contrasts is
+to change the global default contrast settings,
+and the "sum" contrasts will be use for all factors,
+now and later:
+
+```{r, eval=F}
+options(contrasts = c("contr.sum", "contr.poly"))
+fit.sum = lm(yield ~ cu_factor * mn_factor, data=soy)
+summary(fit.sum) # same as above
+```

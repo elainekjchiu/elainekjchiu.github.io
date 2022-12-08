@@ -1,0 +1,276 @@
+---
+title: "One-factor CRD with subsampling"
+#author: "Cécile Ané"
+#date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.height=3.5, fig.width=5)
+options(show.signif.stars=FALSE)
+knitr::opts_knit$set(global.par=TRUE, html.table.attributes = '')
+```
+
+```{r, include=FALSE}
+par(mar=c(2.1,2.1,.5,.5), mgp=c(1.3,.3,0), tck=-0.01)
+library(ggplot2)
+library(dplyr)
+```
+
+# the data
+
+An experiment was conducted as a completely randomized design with sub-sampling:
+there were 4 treatments, and 4 plots for each treatment.
+Within each plot 3 measurements (subsamples) were taken.
+In the data file, the column "core" indicates the subsample number.
+The column "y" contains the response.
+
+```{r, fig.height=3.5, fig.width=5.5}
+dat = read.csv("crdsub.csv", colClasses=c("factor","factor","factor","numeric"))
+head(dat, n=4)
+with(dat, table(trt,plot))
+ggplot(dat, aes(y=y, x=trt, shape=plot, color=plot)) + geom_point() +theme_minimal()
+```
+
+# manual analysis with fixed-effects
+
+For the analysis, we can start with a fixed-effect model to get the ANOVA table.
+The random effect for "plot" should be be indicated with `plot`,
+because the plot values go from 1 to 4 only, and plot 1 means totally different
+plots across treatments (say). So we use `trt:plot` to get a different plot
+value for each plot (e.g. `1:1` for plot 1 in treatment 1, and `2:1` for plot 1
+in treatment 2).
+
+```{r}
+fit1 = lm(y ~ trt + trt:plot, dat)
+anova(fit1) # warning: wrong F test for trt, because fixed-effect model
+```
+
+**Warning** about the output above:
+the F-test is wrong for the fixed effects (treatment),
+because the plot effects are considered fixed here instead of random.
+The test for plot variation is correct though.
+
+Since this is a balanced design, so we can use the SS and MS from the
+`anova` function above
+(which returns type 1 SSs, but type 1 = type 3 SS with balanced designs).
+So here is a correct test for treatment differences:
+
+```{r, eval=F}
+f = 9.8024 / 1.4488; f             # f = 6.765875
+pf(f, df1=3, df2=12, lower.tail=F) # p-value = 0.006365391
+(1.4488 - 0.1281)/3                # sigma2_plot = 0.4402333
+```
+
+**Warning** again: the fixed effects model has wrong SEs for
+treatment means (e.g. intercept = mean of treatment 1 in plot 1 here)
+and wrong SEs for treatment differences.
+
+```{r}
+head(summary(fit1)$coefficients, n=14)
+```
+
+# correct analysis: random-effects model
+
+Use the `lme4` package for random effects.
+`nlme` is an alternative, but can only handle nested random effects, not
+crossed random effects.
+<!--However, when applicable, `nlme` will try to guess the approximate dfs for F tests, and return associated p-values.-->
+
+```{r, message=F}
+library(lme4)
+fit2 = lmer(y ~ trt + (1 | trt:plot), dat)
+summary(fit2)
+```
+
+note the same estimate for the 2 variance components as estimated above:
+
+- 0.4402 for plot variation
+- 0.1281 for subsample variation (between "cores")
+
+Now to test treatment effects:
+
+```{r}
+anova(fit2) # tests fixed effects
+# then manual calculation of p-value based on 16-4 = 12 df denominator:
+pf(6.7658, df1=3, df2=12, lower.tail=F) # p-value = 0.006365
+```
+
+and to test for variation between plots:
+
+```{r}
+fit2.null = lm(y ~ trt, dat)
+anova(fit2, fit2.null) # put complex model first!
+```
+
+Warning: the test above is a LRT test. Downsides:
+
+- it's only approximate, and
+- it's conservative because σ²=0 is at
+  the boundary of the parameter space.
+
+Alternative, use tools from the `lmerTest` package to get p-values:
+
+```{r, message=F}
+library(lmerTest)
+fit3 = lmer(y ~ trt + (1 | trt:plot), dat)
+anova(fit3)
+drop1(fit3)
+ranova(fit3) # to test for random effects, but LRT. F-test better when appropriate
+```
+
+# pool subsamples?
+
+Here we get something equivalent to the correct
+mixed-model analysis because the design is balanced.
+
+Note that the result of the tests (f statistic & p-value)
+are the same as before, but the sums of squares for `trt` and
+residual SS are exactly 1/3 as large as before,
+because there are only 1/3 as many data points
+used in the analysis.
+
+```{r}
+dat_byplot = dat %>% group_by(trt:plot) %>% summarize(trt=trt[1], plot=plot[1], y=mean(y))
+head(as.data.frame(dat_byplot), n=5)
+fit4 = lm(y ~ trt, dat_byplot)
+anova(fit4)
+summary(fit4)$coefficients
+```
+
+What we lack from this analysis is the ability to measure
+how subsampling helps. With this analysis,
+we can't use this experiment to guide future experiments
+in terms of how many subsamples are optimal.
+
+# treatment differences and contrasts
+
+The output of the `lmer` fit shows the SEs to compare pairs
+of treatments (0.4914) and the SEs to get the confidence interval
+for a single treatment mean (0.3475 --here for treatment 1, but
+it's the same for all treatment means because the design is balanced).
+
+```{r}
+# fit2@beta   # same values as below (fixed effects), no names
+# fixef(fit2) # fixed effects
+summary(fit2)$coefficients
+```
+
+`lmerTest` also makes it very easy to make pairwise comparisons
+(but warning: *no* multiple comparison protection here)
+
+```{r}
+ls_means(fit3)
+ls_means(fit3, which="trt", pairwise=TRUE)
+```
+
+or we can use the `emmeans` package
+
+```{r, message=F}
+library(emmeans)
+fit3_em = emmeans(fit3, "trt")
+fit3_em
+pairs(fit3_em) # Tukey correction by default, unlike above
+pwpm(fit3_em, adjust="none", means=F) # no correction: LSD. bottom: t-values
+```
+
+Next, let's test the contrast `mu1 + mu2 + m3 - 3*mu4`, say.
+The `contrast` function from `emmeans` is the easiest to use,
+in terms of setting up our coefficients:
+
+```{r}
+res = contrast(fit3_em, list(trt123_vs_4 = c(1,1,1,-3)))
+# summary(res)$estimate; summary(res)$t.ratio # to get more precision
+res
+```
+
+or we can use the `contest` function from `lmerTest`,
+which requires being careful when setting up our coefficients:
+
+```{r}
+fixef(fit3) # to get the meaning and order of coefficients
+# sum(c(0,1,1,-3) * fixef(fit3)) # contrast value
+contest(fit3, c(0,1,1,-3)) # "con"trast "test", from lmerTest library
+```
+
+Note the F-value above is `8.020224 = (-2.832)^2 = t^2`.
+
+# check assumptions
+
+A plot of the total residuals that combine plot and subsample variation
+is *not* very helpful:
+
+```{r, fig.height=2.8, fig.width=5}
+ggplot(data.frame(trt=dat$trt, resid=resid(fit2), plot=dat$plot), 
+  aes(x=trt, y=resid, color=plot, shape=plot)) +geom_point() +theme_minimal()
+```
+
+Let's first check the assumptions on the residuals at the subsample level,
+i.e. the term that is not accounted for in the model
+(the last residual level of variation).
+
+For this, it will be useful to get the model predictions
+that do or do not use the estimated random effects:
+
+```{r}
+head(cbind(
+  predict(fit2), # uses estimated random effects (re) by default
+  predict(fit2, re.form=NA) )) # prediction for new plots: unknown random effects
+```
+
+To get the residuals at the subsample level, we calculate
+the difference between the observations and the predictions
+that know about the estimated plot (random) effects.
+
+```{r, fig.height=2.8, fig.width=5}
+subsample_residuals = dat$y - predict(fit2)
+tmp = data.frame(fitted=predict(fit2), resid=subsample_residuals, trt=dat$trt)
+ggplot(tmp, aes(x=fitted, y=resid, color=trt,shape=trt)) +geom_point() +theme_minimal()
+```
+```{r, fig.height=2.5, fig.width=4}
+ggplot(tmp, aes(sample=resid)) + geom_qq() + theme_minimal()
+```
+
+To look at residuals at the level of plots:
+we can extract the best linear unbiased
+estimates (BLUPs) of the random effects.
+In the residual plots below, we should have 16 points only:
+1 per plot.
+
+```{r, fig.height=2.5, fig.width=4}
+re = ranef(fit2); head(re$trt, n=4)
+tmp = data.frame(resid = re[[1]][,1],
+                 trt = substr(rownames(re[[1]]), 1,1))
+tmp$fitted = predict(fit2, tmp, re.form=NA)
+ggplot(tmp, aes(x=fitted, y=resid)) + geom_point() + theme_minimal()
+ggplot(tmp, aes(sample=resid)) + geom_qq() + theme_minimal()
+```
+
+```{r, fig.height=3.5, fig.width=4}
+library(lattice) # for dotplot function
+# BLUPs and 95% prediction intervals for random effects for plots 
+dotplot(ranef(fit2, condVar=TRUE))[[1]]
+```
+
+Conclusion: at both levels (plots and subsamples),
+the assumption of a normal distribution and equal variance seems
+adequate.
+
+<!-- # treatment differences using multcomp -->
+
+<!-- or use the `multcomp` package, which is very versatile (with multiple comparison procedures), but goes with the normal approximation instead of an approximate T distribution to get p-values. Note that the z-values below are the same as the t-values above. Only the p-values differ. -->
+
+```{r, message=F, eval=F, include=F}
+library(multcomp)
+summary(glht(fit2, linfct=mcp(trt="Tukey")), test=univariate()) # no correction
+summary(glht(fit2, linfct=mcp(trt="Tukey"))) # Tukey correction
+```
+
+
+```{r, eval=F, include=F}
+# contrast `mu1 + mu2 + m3 - 3*mu4`, say.
+fixef(fit3) # to get the meaning and order of coefficients
+sum(c(0,1,1,-3) * fixef(fit3)) # contrast value
+contest(fit3, c(0,1,1,-3)) # "con"trast "test", from lmerTest library
+summary(glht(fit3, linfct = matrix(c(0,1,1,-3),1,4)))
+```

@@ -1,0 +1,143 @@
+---
+title: "Allocating Treatments in a CRD"
+#author: "Cécile Ané"
+#date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.height=4, fig.width=9)
+# options(show.signif.stars=FALSE)
+knitr::opts_knit$set(global.par = TRUE, html.table.attributes = '')
+```
+
+```{r, include=FALSE}
+par(mar=c(2.1,2.1,.5,.5), mgp=c(1.3,.3,0), tck=-0.01)
+set.seed(1)
+```
+
+Imagine 4 treatments and 16 units total.
+In a completely randomized design (CRD), we want to allocate
+4 units to each of the 4 treatments at random:
+
+```{r}
+trts = sample(rep(1:4, each=4)) # "rep"eats 1,2,3,4, 4 times each: 1,1,1,1,2,2,...,4
+trts # "sample": like drawing from a hat, without replacement
+```
+
+now we can arrange these allocations of treatments to units 
+in a 4x4 grid:
+
+```{r}
+crd = matrix(trts, 4, 4)
+```
+```{r, echo=FALSE}
+crd
+```
+
+Here is a "fair" arrangement of the treatments: each
+treatment appears only once in each row and column:
+
+<!-- fair = matrix(c(3,2,1,4, 4,1,3,2, 2,3,4,1, 1,4,2,3),
+              4,4) # in 4 rows, 4 columns-->
+```{r, message=FALSE, results="hide"}
+library(magic) # the function "rlatin" is in package "magic"
+fair = rlatin(4)
+```
+
+```{r, echo=FALSE}
+fair
+```
+
+Now suppose we have some data, with a hidden trend.
+In a corn field, this trend might be caused by heterogeneity,
+in the *absence* of any treatment:
+the plots on the left might be well watered,
+and the plots on the right might be too dry (uphill):
+
+```{r}
+dat = c(12,14,15,17,  7,6,10,12,  5,4,8,7,  4,3,2,1)
+matrix(dat, 4,4) # to view in 4 rows, 4 columns
+```
+
+Suppose there is no treatment effect.  Then we are really
+just randomly assigning the labels "1", "2", "3", and "4" to
+the plots. From each (random) assignment, we can calculate
+the F test statistic. It should look like what it does when
+the null hypothesis is true: an F distribution.
+
+```{r, include=FALSE}
+set.seed(2)
+```
+
+```{r simulrandom, height=4, width=9}
+n_simulations = 1000
+FstatRandom = rep(NA, n_simulations) # 1000 missing values for now
+FstatFair = rep(NA, n_simulations)
+for (i in 1:n_simulations){
+  trts = sample(rep(1:4, each=4))
+  fit  = lm(dat ~ as.factor(trts))
+  FstatRandom[i] = anova(fit)$F[1] # i-th F stat: extracted from ANOVA table
+  trts = c(rlatin(4)) # do it over, but fair allocation
+  fit  = lm(dat ~ as.factor(trts))
+  FstatFair[i] = anova(fit)$F[1]
+}
+layout(matrix(1:2,1,2))
+hist(FstatRandom, probability=TRUE, breaks=40, ylim=c(0,.8), xlim=c(0,10),
+     col="tan", main="", xlab="F statistic")
+xx = seq(0, 10, 0.01)
+lines(xx, df(xx, 3, 12)) # df = density of F distribution
+hist(FstatFair, probability=TRUE, breaks=2, xlim=c(0, 4), col="tan", main="")
+lines(xx, df(xx, 3, 12))
+```
+
+above left: histogram of `r n_simulations` F-statistics based on
+`r n_simulations` random allocations of treatment labels in a CRD
+with k=4 treatments and n=4 units per treatments.
+The smooth line corresponds to an F<sub>3,12</sub> distribution.
+
+above right: the same but with "fair" allocations, using latin squares.
+histogram of `r n_simulations` F-statistics based on
+`r n_simulations` "fair" allocations of treatment labels in a
+CRD with k=4 treatments and n=4 units per treatments.
+The smooth line corresponds to an F<sub>3,12</sub> distribution.
+
+### &nbsp;
+<!-- to make space only-->
+
+### latin square analysis: to follow the design
+
+if we assign treatments with a latin square ("fair" assignment),
+we should analyze the resulting data accordingly: with a row factor,
+a column factor, and the treatment factor, like in this example
+(note that the column effect is detected as significant).
+
+```{r}
+plotrow = factor(rep(1:4, 4))      # the row number: 1,2,3,4, 1,2,3,4, etc.
+plotcol = factor(rep(1:4, each=4)) #  column number: 1,1,1,1, 2,2,2,2, etc.
+trts = c(rlatin(4)) # one random fair allocation of treatments
+fit  = lm(dat ~ plotrow + plotcol + as.factor(trts))
+drop1(fit, test="F")
+```
+
+<!--
+The simulation with "fair" allocations (above right) was repeated,
+but each data set was analyzed like this:
+
+the F-statistics are no longer biased when the analysis follows the design
+(full simulation code not shown):
+(actually, F takes only 1 of 5 values)
+
+```{r latinsquare, height=4, width=9, echo=FALSE}
+n_simulations = 1000
+FstatFair = rep(NA, n_simulations) # 1000 missing values for now
+for (i in 1:n_simulations){
+  trts = c(rlatin(4)) # fair allocation of treatments
+  fit  = lm(dat ~ plotrow + plotcol + as.factor(trts)) # latin square model
+  FstatFair[i] = anova(fit)$F[1] # extract F value
+}
+layout(matrix(1:2,1,2))
+hist(FstatFair, probability=TRUE, breaks=40, ylim=c(0,.8), xlim=c(0,10), col="tan", main="")
+lines(xx, df(xx, 3, 12)) # df = density of F distribution
+```
+-->
